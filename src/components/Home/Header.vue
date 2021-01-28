@@ -30,17 +30,39 @@
       </el-autocomplete>
     </el-col>
     <el-col :span="2" :push="1">
-      <el-dropdown placement="bottom">
-      <el-avatar
-        style="margin-top: 5px"
-        :size="35"
-        src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-        class="el-dropdown-link"
-      >
-      </el-avatar>
-      <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item icon="el-icon-user-solid">个人中心</el-dropdown-item>
-      </el-dropdown-menu>
+      <el-dropdown placement="bottom" @visible-change="havAvatar">
+        <el-avatar
+          style="margin-top: 5px"
+          :size="avatarSize"
+          src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+          class="el-dropdown-link"
+        >
+        </el-avatar>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item disabled="true"
+            ><p class="userName">{{ userName }}</p></el-dropdown-item
+          >
+          <el-dropdown-item disabled="true"
+            ><img
+            v-if="vip==1"
+              id="vip"
+              src="@/assets/icon/yvip.svg"
+              alt=""
+              height="30px"
+              width="50px"
+          />
+          <img
+            v-if="vip==0"
+              id="vip"
+              src="@/assets/icon/nvip.svg"
+              alt=""
+              height="30px"
+              width="50px"
+          /></el-dropdown-item>
+          <el-dropdown-item icon="el-icon-user-solid"
+            >个人中心</el-dropdown-item
+          >
+        </el-dropdown-menu>
       </el-dropdown>
     </el-col>
   </el-row>
@@ -57,10 +79,13 @@ export default {
   data() {
     //这里存放数据
     return {
-      activeName: "second",
+      activeName: "",
       restaurants: [],
       state: "",
       timeout: null,
+      userName: "lzq",
+      avatarSize: 35,
+      vip: 0,
     };
   },
   //监听属性 类似于data概念
@@ -106,6 +131,9 @@ export default {
     handleIconClick(ev) {
       console.log(ev);
     },
+    havAvatar(vd) {
+      vd ? (this.avatarSize = 45) : (this.avatarSize = 35);
+    },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
@@ -127,6 +155,13 @@ export default {
   margin-top: 7px;
   margin-left: 30px;
 }
-
+p.userName {
+  font-size: 25px;
+  text-align: center;
+  color: #000;
+}
+#vip {
+  padding-left: 13px;
+}
 /*搜索框*/
 </style>
