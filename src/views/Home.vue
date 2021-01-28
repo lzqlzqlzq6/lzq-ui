@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="header">
-      <Header/>
+      <Header />
     </div>
   </div>
 </template>
@@ -40,10 +40,9 @@ export default {
 </script>
 <style lang='scss' scoped>
 #app {
-  margin: 0;
-  padding: 0;
+  height: 100%;
 }
-.header{
+.header {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   height: 46px;
 }

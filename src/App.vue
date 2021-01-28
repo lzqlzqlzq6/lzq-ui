@@ -5,12 +5,15 @@
 </template>
 
 <script>
-export default  {
-  name:  'App'
-}
+export default {
+  name: "App",
+};
 </script>
 <style>
 body {
   margin: 0;
+  height: 100%;
+  min-width: 1535px;
+  cursor: default;
 }
 </style>
