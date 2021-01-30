@@ -1,20 +1,32 @@
 <template>
-  <el-row type="flex">
-    <el-col :span="2"
-      ><img id="logo" src="@/assets/logo/logo.png" width="80px" height="30px"
-    /></el-col>
-    <el-col :span="6" id="logo"
-      ><el-tabs v-model="activeName">
-        <el-tab-pane label="首页" name="home"></el-tab-pane>
-        <el-tab-pane label="博客" name="blog"></el-tab-pane>
-        <el-tab-pane label="下载" name="down"></el-tab-pane>
-        <el-tab-pane label="论坛" name="forum"></el-tab-pane>
-        <el-tab-pane label="问答" name="qa"></el-tab-pane>
-        <el-tab-pane label="电子书" name="book"></el-tab-pane> </el-tabs
+  <el-row type="flex" justify="center">
+    <el-col :span="2" pull="1">
+      <el-link :underline="false">
+        <img
+          id="logo"
+          src="@/assets/logo/logo.png"
+          width="80px"
+          height="30px"
+        /> </el-link
     ></el-col>
-    <el-col :span="6" :push="1">
+    <el-col :span="1" id="logo" pull="1">
+      <el-link :underline="false">首页</el-link>
+    </el-col>
+    <el-col :span="1" id="logo" pull="1">
+      <el-link :underline="false" id="ng">博客</el-link>
+    </el-col>
+    <el-col :span="1" id="logo" pull="1">
+      <el-link :underline="false">下载</el-link>
+    </el-col>
+    <el-col :span="1" id="logo" pull="1">
+      <el-link :underline="false">论坛</el-link>
+    </el-col>
+    <el-col :span="1" id="logo" pull="1">
+      <el-link :underline="false">电子书</el-link>
+    </el-col>
+    <el-col :span="4">
       <el-autocomplete
-        style="width: 350px; padding-top: 2px"
+        style="width: 250px; padding-top: 2px"
         clearable="true"
         v-model="state"
         :fetch-suggestions="querySearchAsync"
@@ -29,7 +41,7 @@
         </i>
       </el-autocomplete>
     </el-col>
-    <el-col :span="2" :push="1">
+    <el-col :span="1" style="text-align: center">
       <el-dropdown placement="bottom" @visible-change="havAvatar">
         <el-avatar
           style="margin-top: 5px"
@@ -42,28 +54,45 @@
           <el-dropdown-item disabled="true"
             ><p class="userName">{{ userName }}</p></el-dropdown-item
           >
-          <el-dropdown-item disabled="true"
+          <el-dropdown-item :disabled="vip == 1"
             ><img
-            v-if="vip==1"
+              v-if="vip == 1"
               id="vip"
               src="@/assets/icon/yvip.svg"
               alt=""
               height="30px"
-              width="50px"
-          />
-          <img
-            v-if="vip==0"
-              id="vip"
-              src="@/assets/icon/nvip.svg"
-              alt=""
-              height="30px"
-              width="50px"
-          /></el-dropdown-item>
-          <el-dropdown-item icon="el-icon-user-solid"
+              width="50px" />
+            <el-tooltip
+              v-if="vip == 0"
+              class="item"
+              effect="light"
+              content="点击开通会员，即刻享有资源下载、vip博客、电子书折扣优惠！"
+              placement="left"
+            >
+              <img
+                id="vip"
+                src="@/assets/icon/nvip.svg"
+                alt=""
+                height="30px"
+                width="50px" /></el-tooltip
+          ></el-dropdown-item>
+          <el-dropdown-item icon="el-icon-user-solid" divided="true"
             >个人中心</el-dropdown-item
+          >
+          <el-dropdown-item icon="el-icon-star-on">我的收藏</el-dropdown-item>
+          <el-dropdown-item icon="el-icon-s-order">我的订单</el-dropdown-item>
+          <el-dropdown-item icon="el-icon-s-finance">我的钱包</el-dropdown-item>
+          <el-dropdown-item icon="el-icon-switch-button" divided="true"
+            >退出</el-dropdown-item
           >
         </el-dropdown-menu>
       </el-dropdown>
+    </el-col>
+    <el-col :span="1">
+      <el-link :underline="false" id="message">
+        <el-badge is-dot class="item"
+          ><i class="el-input__icon el-icon-message-solid"></i></el-badge
+      ></el-link>
     </el-col>
   </el-row>
 </template>
@@ -154,6 +183,12 @@ export default {
 #logo {
   margin-top: 7px;
   margin-left: 30px;
+  el-link {
+    text-align: center;
+    font-size: 18px;
+    font-family: Microsoft YaHei;
+    font-weight: bold;
+  }
 }
 p.userName {
   font-size: 25px;
@@ -163,5 +198,13 @@ p.userName {
 #vip {
   padding-left: 13px;
 }
-/*搜索框*/
+#message {
+  font-size: 28px;
+  .item {
+    margin-top: 5px;
+    i {
+      margin-left: 15px;
+    }
+  }
+}
 </style>

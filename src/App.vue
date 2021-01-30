@@ -12,6 +12,7 @@ export default {
 <style>
 body {
   margin: 0;
+  padding: 0;
   height: 100%;
   min-width: 1535px;
   cursor: default;
