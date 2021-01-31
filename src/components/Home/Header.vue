@@ -94,6 +94,9 @@
           ><i class="el-input__icon el-icon-message-solid"></i></el-badge
       ></el-link>
     </el-col>
+    <el-col :span="2">
+      <el-button id="xbk" type="primary" size="medium" round plain>写博客</el-button>
+    </el-col>
   </el-row>
 </template>
 
@@ -206,5 +209,9 @@ p.userName {
       margin-left: 15px;
     }
   }
+}
+#xbk {
+  margin-top: 5px;
+  font-size: 15px;
 }
 </style>
