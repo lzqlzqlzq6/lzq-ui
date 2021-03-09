@@ -1,25 +1,24 @@
 <template>
-  <div id="app">
-    <div class="header">
-      <Header />
-    </div>
-    <div><Blog /></div>
-    <div class="footer"><Footer /></div>
-  </div>
+  <el-row id="index"
+    ><el-col :span="2" :push="3"><Navigation /> </el-col
+    ><el-col :span="8" :push="3"><Blog /> </el-col>
+    <el-col :span="4" :push="7"><Link /> </el-col
+  ></el-row>
 </template>
 
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-import Header from "@/components/Home/Header";
-import Footer from "@/components/Home/Footer";
-import Blog from "@/components/Blog/Index";
+import Navigation from "@/components/Blog/Navigation";
+import Blog from "@/components/Blog/Blog";
+import Link from "@/components/Blog/Link";
 export default {
-  name: "Home",
+  //import引入的组件需要注入到对象中才能使用
+  name: "Index",
   components: {
-    Header,
+    Navigation,
     Blog,
-    Footer,
+    Link,
   },
   data() {
     //这里存放数据
@@ -45,13 +44,8 @@ export default {
 };
 </script>
 <style lang='scss' scoped>
-#app {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-.header {
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  height: 46px;
+//@import url(); 引入公共css类
+#index {
+  margin-top: 10px;
 }
 </style>

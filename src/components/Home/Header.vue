@@ -41,7 +41,7 @@
         </i>
       </el-autocomplete>
     </el-col>
-    <el-col :span="1" style="text-align: center">
+    <el-col :span="1" style="text-align: center" v-if="isLogin == 1">
       <el-dropdown placement="bottom" @visible-change="havAvatar">
         <el-avatar
           style="margin-top: 5px"
@@ -88,14 +88,109 @@
         </el-dropdown-menu>
       </el-dropdown>
     </el-col>
-    <el-col :span="1">
-      <el-link :underline="false" id="message">
-        <el-badge is-dot class="item"
-          ><i class="el-input__icon el-icon-message-solid"></i></el-badge
-      ></el-link>
+    <el-col :span="2" style="text-align: center" v-if="isLogin == 0">
+      <el-button type="text" class="login" @click="dialogVisible = true"
+        >登录/注册</el-button
+      >
+      <el-dialog
+        title="登录/注册"
+        :visible.sync="dialogVisible"
+        width="30%"
+        :before-close="handleClose"
+      >
+        <el-tabs type="border-card">
+          <el-tab-pane label="账号登录"
+            ><el-form
+              :model="ruleForm"
+              status-icon
+              :rules="rules"
+              ref="ruleForm"
+              label-width="100px"
+            >
+              <el-form-item label="账号" prop="account">
+                <el-input
+                  v-model="ruleForm.account"
+                  autocomplete="off"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="确认密码" prop="pass">
+                <el-input
+                  type="password"
+                  v-model="ruleForm.pass"
+                  autocomplete="off"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="验证码" prop="verification">
+                <el-col :span="12">
+                  <el-input
+                    style="width: 150px"
+                    v-model.number="ruleForm.verification"
+                  ></el-input>
+                </el-col>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="Login('ruleForm')"
+                  >登录</el-button
+                >
+                <el-button @click="resetForm('ruleForm')">重置</el-button>
+              </el-form-item>
+            </el-form></el-tab-pane
+          >
+          <el-tab-pane label="手机号登录">
+            <el-form
+              :model="ruleForm"
+              status-icon
+              :rules="rules"
+              ref="ruleForm"
+              label-width="100px"
+            >
+              <el-form-item label="手机号" prop="phone">
+                <el-input
+                  v-model="ruleForm.phone"
+                  autocomplete="off"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="验证码" prop="phoneVerification">
+                <el-col :span="12">
+                  <el-input
+                    style="width: 150px"
+                    v-model.number="ruleForm.phoneVerification"
+                  ></el-input>
+                </el-col>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="phoneLogin('ruleForm')"
+                  >登录</el-button
+                >
+                <el-button @click="resetForm('ruleForm')">重置</el-button>
+              </el-form-item>
+            </el-form>
+          </el-tab-pane>
+          <el-tab-pane label="微信注册"></el-tab-pane>
+        </el-tabs>
+      </el-dialog>
     </el-col>
-    <el-col :span="2">
-      <el-button id="xbk" type="primary" size="medium" round plain>写博客</el-button>
+    <el-col :span="1" v-if="isLogin == 1">
+      <el-dropdown trigger="click" id="msg">
+        <span class="el-dropdown-link">
+          通知<i class="el-icon-caret-bottom el-icon--right"></i>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item class="clearfix">
+            评论
+            <el-badge class="mark" :value="12" />
+          </el-dropdown-item>
+          <el-dropdown-item class="clearfix">
+            回复
+            <el-badge class="mark" :value="3" />
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+    </el-col>
+    <el-col :span="2" v-if="isLogin == 1">
+      <el-button id="xbk" type="primary" size="medium" round plain
+        >写博客</el-button
+      >
     </el-col>
   </el-row>
 </template>
@@ -109,6 +204,47 @@ export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
   data() {
+    const phoneRegex = /^1[3456789]\d{9}$/;
+    var checkAccount = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error("账号不能为空"));
+      } else {
+        callback();
+      }
+    };
+    var validatePass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else {
+        if (this.ruleForm.checkPass !== "") {
+          this.$refs.ruleForm.validateField("checkPass");
+        }
+        callback();
+      }
+    };
+    var checkVerification = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入验证码"));
+      } else {
+        callback();
+      }
+    };
+    var checkPhone = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error("手机号不能为空"));
+      } else if (!phoneRegex.test(value)) {
+        return callback(new Error("请输入正确的手机号码！"));
+      } else {
+        callback();
+      }
+    };
+    var checkPhoneVerification = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入验证码"));
+      } else {
+        callback();
+      }
+    };
     //这里存放数据
     return {
       activeName: "",
@@ -118,6 +254,24 @@ export default {
       userName: "lzq",
       avatarSize: 35,
       vip: 0,
+      isLogin: 1,
+      dialogVisible: false,
+      ruleForm: {
+        account: "",
+        pass: "",
+        verification: "",
+        phone: "",
+        phoneVerification: "",
+      },
+      rules: {
+        account: [{ validator: checkAccount, trigger: "blur" }],
+        pass: [{ validator: validatePass, trigger: "blur" }],
+        verification: [{ validator: checkVerification, trigger: "blur" }],
+        phone: [{ validator: checkPhone, trigger: "blur" }],
+        phoneVerification: [
+          { validator: checkPhoneVerification, trigger: "blur" },
+        ],
+      },
     };
   },
   //监听属性 类似于data概念
@@ -166,6 +320,30 @@ export default {
     havAvatar(vd) {
       vd ? (this.avatarSize = 45) : (this.avatarSize = 35);
     },
+
+    Login(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert("submit!");
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    phoneLogin(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert("phoneLoginsubmit!");
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
@@ -198,20 +376,21 @@ p.userName {
   text-align: center;
   color: #000;
 }
+.el-dropdown-link{
+  color: #409EFF;
+}
 #vip {
   padding-left: 13px;
 }
-#message {
-  font-size: 28px;
-  .item {
-    margin-top: 5px;
-    i {
-      margin-left: 15px;
-    }
-  }
+#msg {
+  padding-top: 12px;
 }
 #xbk {
   margin-top: 5px;
   font-size: 15px;
+}
+.login {
+  padding-top: 15px;
+  padding-left: 10px;
 }
 </style>

@@ -1,29 +1,27 @@
 <template>
-  <div id="app">
-    <div class="header">
-      <Header />
-    </div>
-    <div><Blog /></div>
-    <div class="footer"><Footer /></div>
+  <div class="navigation">
+    <el-card class="box-card">
+      <div v-for="o in 10" :key="o" class="text item">
+        <el-button class="bt" type="text">博客分类</el-button>
+      </div>
+    </el-card>
   </div>
 </template>
 
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-import Header from "@/components/Home/Header";
-import Footer from "@/components/Home/Footer";
-import Blog from "@/components/Blog/Index";
+
 export default {
-  name: "Home",
-  components: {
-    Header,
-    Blog,
-    Footer,
-  },
+  name: "Navigation",
+  //import引入的组件需要注入到对象中才能使用
+  components: {},
   data() {
     //这里存放数据
-    return {};
+    return {
+      isCollapse: true,
+      ssssss: false,
+    };
   },
   //监听属性 类似于data概念
   computed: {},
@@ -45,13 +43,21 @@ export default {
 };
 </script>
 <style lang='scss' scoped>
-#app {
-  height: 100%;
-  margin: 0;
-  padding: 0;
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+  width: 200px;
+  min-height: 600px;
 }
-.header {
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  height: 46px;
+.navigation {
+  
+  width: 100px;
+  .bt {
+    color: rgb(100, 100, 100);
+    min-width: 60px;
+    &:hover {
+      background-color: rgb(218, 218, 218);
+      font-weight: bold;
+      color: #000;
+    }
+  }
 }
 </style>

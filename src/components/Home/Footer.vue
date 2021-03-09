@@ -1,26 +1,19 @@
 <template>
-  <div id="app">
-    <div class="header">
-      <Header />
-    </div>
-    <div><Blog /></div>
-    <div class="footer"><Footer /></div>
+  <div class="footer">
+    <span style="padding-top: 50px"
+      ><a>关于我们</a>丨<a>加入我们</a>丨<a>联系我们</a>丨<a>帮助中心</a></span
+    ><br />
+    <span>Copyright © LZQ网络科技有限公司 湘ICP备 - 199909220017号</span>
   </div>
 </template>
 
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-import Header from "@/components/Home/Header";
-import Footer from "@/components/Home/Footer";
-import Blog from "@/components/Blog/Index";
+
 export default {
-  name: "Home",
-  components: {
-    Header,
-    Blog,
-    Footer,
-  },
+  //import引入的组件需要注入到对象中才能使用
+  components: {},
   data() {
     //这里存放数据
     return {};
@@ -45,13 +38,23 @@ export default {
 };
 </script>
 <style lang='scss' scoped>
-#app {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-.header {
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  height: 46px;
+//@import url(); 引入公共css类
+.footer {
+  width: 100%;
+  height: 150px;
+
+  span {
+    display: flex;
+    justify-content: center;
+    font-size: 12px;
+    color: rgb(168, 168, 168);
+  }
+
+  a {
+    padding-right: 5px;
+    &:hover {
+      color: #000;
+    }
+  }
 }
 </style>
