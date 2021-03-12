@@ -188,8 +188,38 @@
       </el-dropdown>
     </el-col>
     <el-col :span="2" v-if="isLogin == 1">
-      <el-button id="xbk" type="primary" size="medium" round plain
-        >写博客</el-button
+      <answer v-if="$route.path =='/' "
+        ><el-button
+          id="xbk"
+          type="primary"
+          size="medium"
+          round
+          plain
+          @click="editor"
+          >写博客</el-button
+        ></answer
+      >
+      <answer v-if="$route.path =='/content' "
+        ><el-button
+          id="xbk"
+          type="primary"
+          size="medium"
+          round
+          plain
+          @click="editor"
+          >写博客</el-button
+        ></answer
+      >
+      <answer v-if="$route.path == '/editor'"
+        ><el-button
+          id="xbk"
+          type="primary"
+          size="medium"
+          @click="submit"
+          round
+          plain
+          >发布博客</el-button
+        ></answer
       >
     </el-col>
   </el-row>
@@ -247,6 +277,7 @@ export default {
     };
     //这里存放数据
     return {
+      mktext: "",
       activeName: "",
       restaurants: [],
       state: "",
@@ -280,6 +311,12 @@ export default {
   watch: {},
   //方法集合
   methods: {
+    submit() {
+      console.log(this.mktext);
+    },
+    editor() {
+      this.$router.push("/editor");
+    },
     loadAll() {
       return [
         {
@@ -349,6 +386,10 @@ export default {
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
+    var that=this
+    this.$EventBus.$on("change", (mktext) => {
+      that.mktext = mktext; //这是组件A发送的消息！
+    });
     this.restaurants = this.loadAll();
   },
   beforeCreate() {}, //生命周期 - 创建之前
@@ -376,8 +417,8 @@ p.userName {
   text-align: center;
   color: #000;
 }
-.el-dropdown-link{
-  color: #409EFF;
+.el-dropdown-link {
+  color: #409eff;
 }
 #vip {
   padding-left: 13px;

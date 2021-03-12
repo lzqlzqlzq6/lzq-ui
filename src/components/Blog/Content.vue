@@ -1,5 +1,15 @@
 <template>
-  <div class="rankandlink"></div>
+  <div class="content">
+    <mavon-editor
+      class="md"
+      :value="htmlContent"
+      defaultOpen="preview"
+      :subfield="false"
+      :toolbarsFlag="false"
+      :scrollStyle="false"
+      :editable="false"
+    />
+  </div>
 </template>
 
 <script>
@@ -7,12 +17,14 @@
 //例如：import 《组件名称》 from '《组件路径》';
 
 export default {
-  name: "Rankandlink",
   //import引入的组件需要注入到对象中才能使用
   components: {},
   data() {
     //这里存放数据
-    return {};
+
+    return {
+      htmlContent: "```spring```",
+    };
   },
   //监听属性 类似于data概念
   computed: {},
@@ -35,4 +47,8 @@ export default {
 </script>
 <style lang='scss' scoped>
 //@import url(); 引入公共css类
+.md{
+  margin-top: 3px;
+  min-height: 550px;
+}
 </style>

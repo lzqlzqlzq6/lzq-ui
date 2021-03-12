@@ -1,5 +1,5 @@
 <template>
-  <div class="blog">
+  <div class="list">
     <a href="#" v-for="o in 10" :key="o">
       <el-card shadow="hover">
         <p class="title">123</p>
@@ -67,7 +67,7 @@ export default {
 </script>
 <style lang='scss' scoped>
 //@import url(); 引入公共css类
-.blog {
+.list {
   width: 200px;
   a {
     text-decoration: none;

@@ -3,7 +3,12 @@
     <div class="header">
       <Header />
     </div>
-    <div><Blog /></div>
+    <answer v-if="$route.path == '/editor'"><Editor /> </answer>
+    <answer v-if="$route.path == '/content'"><Content /> </answer>
+    <answer v-if="$route.path == '/'"
+      ><div><Blog /></div
+    ></answer>
+
     <div class="footer"><Footer /></div>
   </div>
 </template>
@@ -11,15 +16,19 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-import Header from "@/components/Home/Header";
-import Footer from "@/components/Home/Footer";
+import Header from "@/components/common/Header";
+import Footer from "@/components/common/Footer";
 import Blog from "@/components/Blog/Index";
+import Editor from "@/components/Blog/Editor";
+import Content from "@/components/Blog/Content";
 export default {
   name: "Home",
   components: {
     Header,
     Blog,
     Footer,
+    Editor,
+    Content,
   },
   data() {
     //这里存放数据

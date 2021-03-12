@@ -1,7 +1,7 @@
 <template>
   <el-row id="index"
     ><el-col :span="2" :push="3"><Navigation /> </el-col
-    ><el-col :span="8" :push="3"><Blog /> </el-col>
+    ><el-col :span="8" :push="3"><List /> </el-col>
     <el-col :span="4" :push="7"><Link /> </el-col
   ></el-row>
 </template>
@@ -10,14 +10,14 @@
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
 import Navigation from "@/components/Blog/Navigation";
-import Blog from "@/components/Blog/Blog";
+import List from "@/components/Blog/List";
 import Link from "@/components/Blog/Link";
 export default {
   //import引入的组件需要注入到对象中才能使用
   name: "Index",
   components: {
     Navigation,
-    Blog,
+    List,
     Link,
   },
   data() {
