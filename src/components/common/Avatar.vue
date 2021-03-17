@@ -9,7 +9,7 @@
     </el-avatar>
     <el-dropdown-menu slot="dropdown">
       <el-dropdown-item disabled="true"
-        ><p class="userName">{{ userName }}</p></el-dropdown-item
+        ><p class="username">{{ userName }}</p></el-dropdown-item
       >
       <el-dropdown-item :disabled="vip == 1"
         ><img
@@ -52,6 +52,7 @@
 
 export default {
   //import引入的组件需要注入到对象中才能使用
+  name: "Avatar",
   components: {},
   data() {
     //这里存放数据
@@ -67,7 +68,7 @@ export default {
   watch: {},
   //方法集合
   methods: {
-      havAvatar(vd) {
+    havAvatar(vd) {
       vd ? (this.avatarSize = 45) : (this.avatarSize = 35);
     },
   },
@@ -86,4 +87,12 @@ export default {
 </script>
 <style lang='scss' scoped>
 //@import url(); 引入公共css类
+.username {
+  font-size: 25px;
+  text-align: center;
+  color: #000;
+}
+#vip {
+  padding-left: 13px;
+}
 </style>

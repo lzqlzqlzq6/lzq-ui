@@ -42,160 +42,10 @@
       </el-autocomplete>
     </el-col>
     <el-col :span="1" style="text-align: center" v-if="isLogin == 1">
-      <el-dropdown placement="bottom" @visible-change="havAvatar">
-        <el-avatar
-          style="margin-top: 5px"
-          :size="avatarSize"
-          src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-          class="el-dropdown-link"
-        >
-        </el-avatar>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item disabled="true"
-            ><p class="userName">{{ userName }}</p></el-dropdown-item
-          >
-          <el-dropdown-item :disabled="vip == 1"
-            ><img
-              v-if="vip == 1"
-              id="vip"
-              src="@/assets/icon/yvip.svg"
-              alt=""
-              height="30px"
-              width="50px" />
-            <el-tooltip
-              v-if="vip == 0"
-              class="item"
-              effect="light"
-              content="点击开通会员，即刻享有资源下载、vip博客、电子书折扣优惠！"
-              placement="left"
-            >
-              <img
-                id="vip"
-                src="@/assets/icon/nvip.svg"
-                alt=""
-                height="30px"
-                width="50px" /></el-tooltip
-          ></el-dropdown-item>
-          <el-dropdown-item icon="el-icon-user-solid" divided="true"
-            >个人中心</el-dropdown-item
-          >
-          <el-dropdown-item icon="el-icon-star-on">我的收藏</el-dropdown-item>
-          <el-dropdown-item icon="el-icon-s-order">我的订单</el-dropdown-item>
-          <el-dropdown-item icon="el-icon-s-finance">我的钱包</el-dropdown-item>
-          <el-dropdown-item icon="el-icon-switch-button" divided="true"
-            >退出</el-dropdown-item
-          >
-        </el-dropdown-menu>
-      </el-dropdown>
+      <Avatar />
     </el-col>
-    <el-col :span="2" style="text-align: center" v-if="isLogin == 0">
-      <el-button type="text" class="login" @click="dialogVisible = true"
-        >登录/注册</el-button
-      >
-      <el-dialog
-        title="登录/注册"
-        :visible.sync="dialogVisible"
-        width="30%"
-        :before-close="handleClose"
-      >
-        <el-tabs type="border-card">
-          <el-tab-pane label="账号登录"
-            ><el-form
-              :model="ruleForm"
-              status-icon
-              :rules="rules"
-              ref="ruleForm"
-              label-width="100px"
-            >
-              <el-form-item label="账号" prop="account">
-                <el-input
-                  v-model="ruleForm.account"
-                  autocomplete="off"
-                ></el-input>
-              </el-form-item>
-              <el-form-item label="确认密码" prop="pass">
-                <el-input
-                  type="password"
-                  v-model="ruleForm.pass"
-                  autocomplete="off"
-                ></el-input>
-              </el-form-item>
-              <el-form-item label="验证码" prop="verification">
-                <el-col :span="12">
-                  <el-input
-                    style="width: 150px"
-                    v-model="ruleForm.verification"
-                  ></el-input>
-                </el-col>
-                <el-col :span="12">
-                  <img
-                    alt="验证码"
-                    onclick="this.src='/api/lzqblog-blog/defaultKaptcha?d=' + new Date()*1"
-                    src="/api/lzqblog-blog/defaultKaptcha"
-                  />
-                </el-col>
-              </el-form-item>
-              <el-form-item>
-                <el-col :span="6"
-                  ><el-button type="primary" @click="Login('ruleForm')"
-                    >登录</el-button
-                  ></el-col
-                >
-                <el-col :span="12"
-                  ><el-button @click="resetForm('ruleForm')"
-                    >重置</el-button
-                  ></el-col
-                >
-              </el-form-item>
-            </el-form></el-tab-pane
-          >
-          <el-tab-pane label="手机号登录">
-            <el-form
-              :model="ruleForm"
-              status-icon
-              :rules="rules"
-              ref="ruleForm"
-              label-width="100px"
-            >
-              <el-form-item label="手机号" prop="phone">
-                <el-input
-                  v-model="ruleForm.phone"
-                  autocomplete="off"
-                ></el-input>
-              </el-form-item>
-              <el-form-item label="验证码" prop="phoneVerification">
-                <el-col :span="12">
-                  <el-input
-                    style="width: 150px"
-                    v-model="ruleForm.phoneVerification"
-                  ></el-input
-                ></el-col>
-                <el-col :span="12"
-                  ><el-button
-                    class="valiBtn"
-                    :disabled="disabled"
-                    @click="tackBtn"
-                    >{{ valiBtn }}</el-button
-                  >
-                </el-col>
-              </el-form-item>
-              <el-form-item>
-                <el-col :span="6"
-                  ><el-button type="primary" @click="phoneLogin('ruleForm')"
-                    >登录</el-button
-                  ></el-col
-                >
-                <el-col :span="12"
-                  ><el-button @click="resetForm('ruleForm')"
-                    >重置</el-button
-                  ></el-col
-                >
-              </el-form-item>
-            </el-form>
-          </el-tab-pane>
-          <el-tab-pane label="微信注册"></el-tab-pane>
-        </el-tabs>
-      </el-dialog>
+    <el-col :span="2" style="text-align: center" v-if="isLogin == 0"> 
+      <Login/>
     </el-col>
     <el-col :span="1" v-if="isLogin == 1">
       <el-dropdown trigger="click" id="msg">
@@ -255,83 +105,26 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
+import Avatar from "@/components/common/Avatar";
+import Login from "@/components/common/Login";
 import { test } from "@/request/api.js";
 export default {
   name: "Header",
   //import引入的组件需要注入到对象中才能使用
-  components: {},
+  components: {
+    Avatar,
+    Login,
+  },
   data() {
-    const phoneRegex = /^1[3456789]\d{9}$/;
-    var checkAccount = (rule, value, callback) => {
-      if (!value) {
-        return callback(new Error("账号不能为空"));
-      } else {
-        callback();
-      }
-    };
-    var validatePass = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入密码"));
-      } else {
-        if (this.ruleForm.checkPass !== "") {
-          this.$refs.ruleForm.validateField("checkPass");
-        }
-        callback();
-      }
-    };
-    var checkVerification = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入验证码"));
-      } else {
-        callback();
-      }
-    };
-    var checkPhone = (rule, value, callback) => {
-      if (!value) {
-        return callback(new Error("手机号不能为空"));
-      } else if (!phoneRegex.test(value)) {
-        return callback(new Error("请输入正确的手机号码！"));
-      } else {
-        callback();
-      }
-    };
-    var checkPhoneVerification = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入验证码"));
-      } else {
-        callback();
-      }
-    };
     //这里存放数据
     return {
       disabled: false,
-      valiBtn: "获取验证码",
       mktext: "",
       activeName: "",
       restaurants: [],
       state: "",
       timeout: null,
-      userName: "lzq",
-      avatarSize: 35,
-      vip: 0,
-      isLogin: 0,
-      dialogVisible: false,
-      ruleForm: {
-        account: "",
-        pass: "",
-        verification: "",
-        phone: "",
-        phoneVerification: "",
-      },
-      rules: {
-        account: [{ validator: checkAccount, trigger: "blur" }],
-        pass: [{ validator: validatePass, trigger: "blur" }],
-        verification: [{ validator: checkVerification, trigger: "blur" }],
-        phone: [{ validator: checkPhone, trigger: "blur" }],
-        phoneVerification: [
-          { validator: checkPhoneVerification, trigger: "blur" },
-        ],
-      },
+      isLogin: 1,
     };
   },
   //监听属性 类似于data概念
@@ -340,21 +133,6 @@ export default {
   watch: {},
   //方法集合
   methods: {
-    tackBtn() {
-      //验证码倒数60秒
-      let time = 60;
-      let timer = setInterval(() => {
-        if (time == 0) {
-          clearInterval(timer);
-          this.valiBtn = "获取验证码";
-          this.disabled = false;
-        } else {
-          this.disabled = true;
-          this.valiBtn = time + "秒后重试";
-          time--;
-        }
-      }, 1000);
-    },
     submit() {
       console.log(this.mktext);
     },
@@ -398,39 +176,12 @@ export default {
     handleIconClick(ev) {
       console.log(ev);
     },
-    havAvatar(vd) {
-      vd ? (this.avatarSize = 45) : (this.avatarSize = 35);
-    },
-
-    Login(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          alert("submit!");
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    },
-    phoneLogin(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          alert("phoneLoginsubmit!");
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
-    },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
-    test().then(data => {
+    test().then((data) => {
       console.log(data);
     });
     var that = this;
@@ -459,20 +210,8 @@ export default {
     font-weight: bold;
   }
 }
-.valiBtn {
-  width: 100px;
-  font-size: 8px;
-}
-p.userName {
-  font-size: 25px;
-  text-align: center;
-  color: #000;
-}
 .el-dropdown-link {
   color: #409eff;
-}
-#vip {
-  padding-left: 13px;
 }
 #msg {
   padding-top: 12px;
@@ -480,9 +219,5 @@ p.userName {
 #xbk {
   margin-top: 5px;
   font-size: 15px;
-}
-.login {
-  padding-top: 15px;
-  padding-left: 10px;
 }
 </style>
