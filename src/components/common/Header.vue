@@ -124,15 +124,28 @@
                 <el-col :span="12">
                   <el-input
                     style="width: 150px"
-                    v-model.number="ruleForm.verification"
+                    v-model="ruleForm.verification"
                   ></el-input>
+                </el-col>
+                <el-col :span="12">
+                  <img
+                    alt="验证码"
+                    onclick="this.src='/api/lzqblog-blog/defaultKaptcha?d=' + new Date()*1"
+                    src="/api/lzqblog-blog/defaultKaptcha"
+                  />
                 </el-col>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="Login('ruleForm')"
-                  >登录</el-button
+                <el-col :span="6"
+                  ><el-button type="primary" @click="Login('ruleForm')"
+                    >登录</el-button
+                  ></el-col
                 >
-                <el-button @click="resetForm('ruleForm')">重置</el-button>
+                <el-col :span="12"
+                  ><el-button @click="resetForm('ruleForm')"
+                    >重置</el-button
+                  ></el-col
+                >
               </el-form-item>
             </el-form></el-tab-pane
           >
@@ -154,15 +167,29 @@
                 <el-col :span="12">
                   <el-input
                     style="width: 150px"
-                    v-model.number="ruleForm.phoneVerification"
-                  ></el-input>
+                    v-model="ruleForm.phoneVerification"
+                  ></el-input
+                ></el-col>
+                <el-col :span="12"
+                  ><el-button
+                    class="valiBtn"
+                    :disabled="disabled"
+                    @click="tackBtn"
+                    >{{ valiBtn }}</el-button
+                  >
                 </el-col>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="phoneLogin('ruleForm')"
-                  >登录</el-button
+                <el-col :span="6"
+                  ><el-button type="primary" @click="phoneLogin('ruleForm')"
+                    >登录</el-button
+                  ></el-col
                 >
-                <el-button @click="resetForm('ruleForm')">重置</el-button>
+                <el-col :span="12"
+                  ><el-button @click="resetForm('ruleForm')"
+                    >重置</el-button
+                  ></el-col
+                >
               </el-form-item>
             </el-form>
           </el-tab-pane>
@@ -188,7 +215,7 @@
       </el-dropdown>
     </el-col>
     <el-col :span="2" v-if="isLogin == 1">
-      <answer v-if="$route.path =='/' "
+      <answer v-if="$route.path == '/'"
         ><el-button
           id="xbk"
           type="primary"
@@ -199,7 +226,7 @@
           >写博客</el-button
         ></answer
       >
-      <answer v-if="$route.path =='/content' "
+      <answer v-if="$route.path == '/content'"
         ><el-button
           id="xbk"
           type="primary"
@@ -228,7 +255,7 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-
+import { test } from "@/request/api.js";
 export default {
   name: "Header",
   //import引入的组件需要注入到对象中才能使用
@@ -277,6 +304,8 @@ export default {
     };
     //这里存放数据
     return {
+      disabled: false,
+      valiBtn: "获取验证码",
       mktext: "",
       activeName: "",
       restaurants: [],
@@ -285,7 +314,7 @@ export default {
       userName: "lzq",
       avatarSize: 35,
       vip: 0,
-      isLogin: 1,
+      isLogin: 0,
       dialogVisible: false,
       ruleForm: {
         account: "",
@@ -311,6 +340,21 @@ export default {
   watch: {},
   //方法集合
   methods: {
+    tackBtn() {
+      //验证码倒数60秒
+      let time = 60;
+      let timer = setInterval(() => {
+        if (time == 0) {
+          clearInterval(timer);
+          this.valiBtn = "获取验证码";
+          this.disabled = false;
+        } else {
+          this.disabled = true;
+          this.valiBtn = time + "秒后重试";
+          time--;
+        }
+      }, 1000);
+    },
     submit() {
       console.log(this.mktext);
     },
@@ -386,7 +430,10 @@ export default {
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
-    var that=this
+    test().then(data => {
+      console.log(data);
+    });
+    var that = this;
     this.$EventBus.$on("change", (mktext) => {
       that.mktext = mktext; //这是组件A发送的消息！
     });
@@ -411,6 +458,10 @@ export default {
     font-family: Microsoft YaHei;
     font-weight: bold;
   }
+}
+.valiBtn {
+  width: 100px;
+  font-size: 8px;
 }
 p.userName {
   font-size: 25px;

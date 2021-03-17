@@ -1,14 +1,17 @@
 <template>
   <div class="content">
-    <mavon-editor
-      class="md"
-      :value="htmlContent"
-      defaultOpen="preview"
-      :subfield="false"
-      :toolbarsFlag="false"
-      :scrollStyle="false"
-      :editable="false"
-    />
+    <el-row :gutter="20">
+      <el-col :span="13" :offset="3"
+        ><mavon-editor
+          class="md"
+          :value="htmlContent"
+          defaultOpen="preview"
+          :subfield="false"
+          :toolbarsFlag="false"
+          :scrollStyle="false"
+          :editable="false"
+      /></el-col>
+    </el-row>
   </div>
 </template>
 
@@ -47,8 +50,9 @@ export default {
 </script>
 <style lang='scss' scoped>
 //@import url(); 引入公共css类
-.md{
+.md {
   margin-top: 3px;
   min-height: 550px;
+  width: 1100px;
 }
 </style>
