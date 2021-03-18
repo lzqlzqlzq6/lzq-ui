@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="header">
+    <div :class="headerFixed == true ? 'isFixed' : 'header'">
       <Header />
     </div>
     <answer v-if="$route.path == '/editor'"><Editor /> </answer>
@@ -32,24 +32,43 @@ export default {
   },
   data() {
     //这里存放数据
-    return {};
+    return {
+      headerFixed: false,
+    };
   },
   //监听属性 类似于data概念
   computed: {},
   //监控data中的数据变化
   watch: {},
   //方法集合
-  methods: {},
+  methods: {
+    handleScroll() {
+      var scrollTop =
+        window.pageYOffset ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop;
+      var offsetTop = document.querySelector("#app").offsetTop;
+      if (scrollTop > offsetTop) {
+        this.headerFixed = true;
+      } else {
+        this.headerFixed = false;
+      }
+    },
+  },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {},
+  mounted() {
+    window.addEventListener("scroll", this.handleScroll);
+  },
   beforeCreate() {}, //生命周期 - 创建之前
   beforeMount() {}, //生命周期 - 挂载之前
   beforeUpdate() {}, //生命周期 - 更新之前
   updated() {}, //生命周期 - 更新之后
   beforeDestroy() {}, //生命周期 - 销毁之前
-  destroyed() {}, //生命周期 - 销毁完成
+  destroyed() {
+    window.removeEventListener("scroll", this.handleScroll);
+  }, //生命周期 - 销毁完成
   activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 };
 </script>
@@ -62,5 +81,14 @@ export default {
 .header {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   height: 46px;
+}
+.isFixed {
+  background-color: #fff;
+  position: fixed;
+  top: 0;
+  z-index: 999;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  height: 46px;
+  width: 100%;
 }
 </style>

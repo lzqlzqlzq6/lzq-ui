@@ -14,7 +14,7 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
-  min-width: 1535px;
+  min-width: 1300px;
   cursor: default;
 }
 </style>

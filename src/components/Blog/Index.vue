@@ -1,8 +1,13 @@
 <template>
-  <el-row id="index"
-    ><el-col :span="2" :push="3"><Navigation /> </el-col
-    ><el-col :span="8" :push="3"><List /> </el-col>
-    <el-col :span="4" :push="7"><Link /> </el-col
+  <el-row id="index">
+    <div :class="fixed == true ? 'navFixed' : 'nav'">
+      <el-col :span="2"><Navigation /> </el-col>
+    </div>
+    <div :class="fixed == true ? 'listFixed' : 'list'">
+      <el-col :span="8"><List /> </el-col>
+    </div>
+    <div :class="fixed == true ? 'linkFixed' : 'link'">
+      <el-col :span="4"><Link /> </el-col></div
   ></el-row>
 </template>
 
@@ -22,18 +27,35 @@ export default {
   },
   data() {
     //这里存放数据
-    return {};
+    return {
+      fixed: false,
+    };
   },
   //监听属性 类似于data概念
   computed: {},
   //监控data中的数据变化
   watch: {},
   //方法集合
-  methods: {},
+  methods: {
+    navScroll() {
+      var scrollTop =
+        window.pageYOffset ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop;
+      var offsetTop = document.querySelector("#index").offsetTop;
+      if (scrollTop > offsetTop) {
+        this.fixed = true;
+      } else {
+        this.fixed = false;
+      }
+    },
+  },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {},
+  mounted() {
+    window.addEventListener("scroll", this.navScroll);
+  },
   beforeCreate() {}, //生命周期 - 创建之前
   beforeMount() {}, //生命周期 - 挂载之前
   beforeUpdate() {}, //生命周期 - 更新之前
@@ -47,5 +69,29 @@ export default {
 //@import url(); 引入公共css类
 #index {
   margin-top: 10px;
+}
+.navFixed {
+  position: fixed;
+  top: 60px;
+  z-index: 999;
+  margin-left: 200px;
+}
+.listFixed {
+  margin-left: 310px;
+}
+.linkFixed {
+  position: fixed;
+  top: 60px;
+  z-index: 999;
+  margin-left: 814px;
+}
+.nav {
+  margin-left: 200px;
+}
+.list {
+  margin-left: 10px;
+}
+.link {
+  margin-left: 270px;
 }
 </style>

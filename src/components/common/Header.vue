@@ -44,8 +44,8 @@
     <el-col :span="1" style="text-align: center" v-if="isLogin == 1">
       <Avatar />
     </el-col>
-    <el-col :span="2" style="text-align: center" v-if="isLogin == 0"> 
-      <Login/>
+    <el-col :span="2" style="text-align: center" v-if="isLogin == 0">
+      <Login />
     </el-col>
     <el-col :span="1" v-if="isLogin == 1">
       <el-dropdown trigger="click" id="msg">
