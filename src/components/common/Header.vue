@@ -107,7 +107,6 @@
 //例如：import 《组件名称》 from '《组件路径》';
 import Avatar from "@/components/common/Avatar";
 import Login from "@/components/common/Login";
-import { test } from "@/request/api.js";
 export default {
   name: "Header",
   //import引入的组件需要注入到对象中才能使用
@@ -124,7 +123,7 @@ export default {
       restaurants: [],
       state: "",
       timeout: null,
-      isLogin: 1,
+      isLogin: 0,
     };
   },
   //监听属性 类似于data概念
@@ -181,9 +180,6 @@ export default {
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
-    test().then((data) => {
-      console.log(data);
-    });
     var that = this;
     this.$EventBus.$on("change", (mktext) => {
       that.mktext = mktext; //这是组件A发送的消息！

@@ -24,7 +24,7 @@
                 autocomplete="off"
               ></el-input>
             </el-form-item>
-            <el-form-item label="确认密码" prop="pass">
+            <el-form-item label="密码" prop="pass">
               <el-input
                 type="password"
                 v-model="ruleForm.pass"
@@ -45,6 +45,7 @@
                   src="/api/lzqblog-blog/defaultKaptcha"
                 />
               </el-col>
+              <el-input type="hidden" name="remember-me"></el-input>
             </el-form-item>
             <el-form-item>
               <el-col :span="6"
@@ -61,45 +62,7 @@
           </el-form></el-tab-pane
         >
         <el-tab-pane label="手机号登录">
-          <el-form
-            :model="ruleForm"
-            status-icon
-            :rules="rules"
-            ref="ruleForm"
-            label-width="100px"
-          >
-            <el-form-item label="手机号" prop="phone">
-              <el-input v-model="ruleForm.phone" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="验证码" prop="phoneVerification">
-              <el-col :span="12">
-                <el-input
-                  style="width: 150px"
-                  v-model="ruleForm.phoneVerification"
-                ></el-input
-              ></el-col>
-              <el-col :span="12"
-                ><el-button
-                  class="valiBtn"
-                  :disabled="disabled"
-                  @click="tackBtn"
-                  >{{ valiBtn }}</el-button
-                >
-              </el-col>
-            </el-form-item>
-            <el-form-item>
-              <el-col :span="6"
-                ><el-button type="primary" @click="phoneLogin('ruleForm')"
-                  >登录</el-button
-                ></el-col
-              >
-              <el-col :span="12"
-                ><el-button @click="resetForm('ruleForm')"
-                  >重置</el-button
-                ></el-col
-              >
-            </el-form-item>
-          </el-form>
+          <PhoneLogin />
         </el-tab-pane>
         <el-tab-pane label="微信注册"></el-tab-pane>
       </el-tabs>
@@ -110,12 +73,15 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-
+import { login } from "@/request/api.js";
+import PhoneLogin from "@/components/common/PhoneLogin";
 export default {
   //import引入的组件需要注入到对象中才能使用
-  components: {},
+  components: {
+    PhoneLogin,
+  },
   data() {
-    const phoneRegex = /^1[3456789]\d{9}$/;
+    //const phoneRegex = /^1[3456789]\d{9}$/;
     var checkAccount = (rule, value, callback) => {
       if (!value) {
         return callback(new Error("账号不能为空"));
@@ -124,41 +90,20 @@ export default {
       }
     };
     var validatePass = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入密码"));
+      if (!value) {
+        return callback(new Error("请输入密码"));
       } else {
-        if (this.ruleForm.checkPass !== "") {
-          this.$refs.ruleForm.validateField("checkPass");
-        }
         callback();
       }
     };
     var checkVerification = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入验证码"));
-      } else {
-        callback();
-      }
-    };
-    var checkPhone = (rule, value, callback) => {
       if (!value) {
-        return callback(new Error("手机号不能为空"));
-      } else if (!phoneRegex.test(value)) {
-        return callback(new Error("请输入正确的手机号码！"));
+        return callback(new Error("请输入验证码"));
       } else {
         callback();
       }
     };
-    var checkPhoneVerification = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入验证码"));
-      } else {
-        callback();
-      }
-    };
-    //这里存放数据
     return {
-      valiBtn: "获取验证码",
       dialogVisible: false,
       ruleForm: {
         account: "",
@@ -171,10 +116,6 @@ export default {
         account: [{ validator: checkAccount, trigger: "blur" }],
         pass: [{ validator: validatePass, trigger: "blur" }],
         verification: [{ validator: checkVerification, trigger: "blur" }],
-        phone: [{ validator: checkPhone, trigger: "blur" }],
-        phoneVerification: [
-          { validator: checkPhoneVerification, trigger: "blur" },
-        ],
       },
     };
   },
@@ -184,35 +125,12 @@ export default {
   watch: {},
   //方法集合
   methods: {
-    tackBtn() {
-      //验证码倒数60秒
-      let time = 60;
-      let timer = setInterval(() => {
-        if (time == 0) {
-          clearInterval(timer);
-          this.valiBtn = "获取验证码";
-          this.disabled = false;
-        } else {
-          this.disabled = true;
-          this.valiBtn = time + "秒后重试";
-          time--;
-        }
-      }, 1000);
-    },
     Login(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert("submit!");
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    },
-    phoneLogin(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          alert("phoneLoginsubmit!");
+          login(this.ruleForm).then((data) => {
+            console.log(data);
+          });
         } else {
           console.log("error submit!!");
           return false;
@@ -240,10 +158,6 @@ export default {
 .login {
   padding-top: 15px;
   padding-left: 10px;
-}
-.valiBtn {
-  width: 100px;
-  font-size: 8px;
 }
 //@import url(); 引入公共css类
 </style>
