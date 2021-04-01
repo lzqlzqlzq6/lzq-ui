@@ -74,24 +74,24 @@ export default {
   position: fixed;
   top: 60px;
   z-index: 999;
-  margin-left: 200px;
+  margin-left: 13%;
 }
 .listFixed {
-  margin-left: 310px;
+  margin-left: 20.3%;
 }
 .linkFixed {
   position: fixed;
   top: 60px;
   z-index: 999;
-  margin-left: 814px;
+  margin-left: 68.5%;
 }
 .nav {
-  margin-left: 200px;
+  margin-left: 13%;
 }
 .list {
-  margin-left: 10px;
+  margin-left: 1%;
 }
 .link {
-  margin-left: 270px;
+  margin-left: 66.7%;
 }
 </style>

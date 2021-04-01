@@ -39,11 +39,7 @@
                 ></el-input>
               </el-col>
               <el-col :span="12">
-                <img
-                  alt="验证码"
-                  onclick="this.src='/api/lzqblog-blog/defaultKaptcha?d=' + new Date()*1"
-                  src="/api/lzqblog-blog/defaultKaptcha"
-                />
+                <img alt="验证码" @click="getCaptcha()" :src="captchaPath" />
               </el-col>
               <el-input type="hidden" name="remember-me"></el-input>
             </el-form-item>
@@ -75,13 +71,14 @@
 //例如：import 《组件名称》 from '《组件路径》';
 import { login } from "@/request/api.js";
 import PhoneLogin from "@/components/common/PhoneLogin";
+import { getUUID } from "@/utils";
+import { setCookie } from "@/utils/cookie";
 export default {
   //import引入的组件需要注入到对象中才能使用
   components: {
     PhoneLogin,
   },
   data() {
-    //const phoneRegex = /^1[3456789]\d{9}$/;
     var checkAccount = (rule, value, callback) => {
       if (!value) {
         return callback(new Error("账号不能为空"));
@@ -105,12 +102,14 @@ export default {
     };
     return {
       dialogVisible: false,
+      captchaPath: "",
       ruleForm: {
         account: "",
         pass: "",
         verification: "",
         phone: "",
         phoneVerification: "",
+        uuid: "",
       },
       rules: {
         account: [{ validator: checkAccount, trigger: "blur" }],
@@ -125,11 +124,17 @@ export default {
   watch: {},
   //方法集合
   methods: {
+    getCaptcha() {
+      this.ruleForm.uuid = getUUID();
+      this.captchaPath = `/api/lzqblog-auth/auth/defaultKaptcha?uuid=${this.ruleForm.uuid}`;
+    },
     Login(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           login(this.ruleForm).then((data) => {
-            console.log(data);
+            if (data.success) {
+              setCookie(data.data.token)
+            }
           });
         } else {
           console.log("error submit!!");
@@ -142,7 +147,9 @@ export default {
     },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    this.getCaptcha();
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   beforeCreate() {}, //生命周期 - 创建之前
