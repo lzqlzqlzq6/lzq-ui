@@ -1,8 +1,8 @@
 <template>
   <div>
     <el-button type="text" class="login" @click="dialogVisible = true"
-      >登录/注册</el-button
-    >
+      >登录/注册
+    </el-button>
     <el-dialog
       title="登录/注册"
       :visible.sync="dialogVisible"
@@ -10,24 +10,24 @@
       :before-close="handleClose"
     >
       <el-tabs type="border-card">
-        <el-tab-pane label="账号登录"
-          ><el-form
+        <el-tab-pane label="账号登录">
+          <el-form
             :model="ruleForm"
             status-icon
             :rules="rules"
             ref="ruleForm"
             label-width="100px"
           >
-            <el-form-item label="账号" prop="account">
+            <el-form-item label="账号" prop="username">
               <el-input
-                v-model="ruleForm.account"
+                v-model="ruleForm.username"
                 autocomplete="off"
               ></el-input>
             </el-form-item>
-            <el-form-item label="密码" prop="pass">
+            <el-form-item label="密码" prop="password">
               <el-input
                 type="password"
-                v-model="ruleForm.pass"
+                v-model="ruleForm.password"
                 autocomplete="off"
               ></el-input>
             </el-form-item>
@@ -41,26 +41,25 @@
               <el-col :span="12">
                 <img alt="验证码" @click="getCaptcha()" :src="captchaPath" />
               </el-col>
-              <el-input type="hidden" name="remember-me"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-col :span="6"
-                ><el-button type="primary" @click="Login('ruleForm')"
-                  >登录</el-button
-                ></el-col
-              >
-              <el-col :span="12"
-                ><el-button @click="resetForm('ruleForm')"
-                  >重置</el-button
-                ></el-col
-              >
+              <el-col :span="6">
+                <el-button type="primary" @click="Login('ruleForm')"
+                  >登录
+                </el-button>
+              </el-col>
+              <el-col :span="12">
+                <el-button @click="resetForm('ruleForm')">重置 </el-button>
+              </el-col>
             </el-form-item>
-          </el-form></el-tab-pane
-        >
-        <el-tab-pane label="手机号登录">
-          <PhoneLogin />
+          </el-form>
         </el-tab-pane>
-        <el-tab-pane label="微信注册"></el-tab-pane>
+        <el-tab-pane label="手机号登录">
+          <PhoneLogin @phoneDialogVisible="DialogVisible" />
+        </el-tab-pane>
+        <el-tab-pane label="注册">
+          <Res @resDialogVisible="DialogVisible" />
+        </el-tab-pane>
       </el-tabs>
     </el-dialog>
   </div>
@@ -69,14 +68,15 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-import { login } from "@/request/api.js";
 import PhoneLogin from "@/components/common/PhoneLogin";
+import Res from "@/components/common/Res";
 import { getUUID } from "@/utils";
-import { setCookie } from "@/utils/cookie";
+
 export default {
   //import引入的组件需要注入到对象中才能使用
   components: {
     PhoneLogin,
+    Res,
   },
   data() {
     var checkAccount = (rule, value, callback) => {
@@ -101,19 +101,18 @@ export default {
       }
     };
     return {
+      redirect: undefined,
       dialogVisible: false,
       captchaPath: "",
       ruleForm: {
-        account: "",
-        pass: "",
+        username: "",
+        password: "",
         verification: "",
-        phone: "",
-        phoneVerification: "",
-        uuid: "",
+        uuid: undefined,
       },
       rules: {
-        account: [{ validator: checkAccount, trigger: "blur" }],
-        pass: [{ validator: validatePass, trigger: "blur" }],
+        username: [{ validator: checkAccount, trigger: "blur" }],
+        password: [{ validator: validatePass, trigger: "blur" }],
         verification: [{ validator: checkVerification, trigger: "blur" }],
       },
     };
@@ -121,9 +120,19 @@ export default {
   //监听属性 类似于data概念
   computed: {},
   //监控data中的数据变化
-  watch: {},
+  watch: {
+    $route: {
+      handler: function(route) {
+        this.redirect = route.query && route.query.redirect;
+      },
+      immediate: true
+    }
+  },
   //方法集合
   methods: {
+    DialogVisible(data) {
+      this.dialogVisible = data;
+    },
     getCaptcha() {
       this.ruleForm.uuid = getUUID();
       this.captchaPath = `/api/lzqblog-auth/auth/defaultKaptcha?uuid=${this.ruleForm.uuid}`;
@@ -131,11 +140,15 @@ export default {
     Login(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          login(this.ruleForm).then((data) => {
-            if (data.success) {
-              setCookie(data.data.token)
-            }
-          });
+          this.$store
+            .dispatch("Login", this.ruleForm)
+            .then(() => {
+              this.dialogVisible = false;
+              this.$router.push({ path: this.redirect || "/" }).catch(()=>{});
+            })
+            .catch(() => {
+              this.getCaptcha();
+            });
         } else {
           console.log("error submit!!");
           return false;
@@ -161,10 +174,11 @@ export default {
   activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 };
 </script>
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .login {
   padding-top: 15px;
   padding-left: 10px;
 }
+
 //@import url(); 引入公共css类
 </style>

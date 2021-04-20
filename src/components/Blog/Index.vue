@@ -10,7 +10,6 @@
       <el-col :span="4"><Link /> </el-col></div
   ></el-row>
 </template>
-
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
@@ -74,24 +73,24 @@ export default {
   position: fixed;
   top: 60px;
   z-index: 999;
-  margin-left: 13%;
+  margin-left: 16.5%;
 }
 .listFixed {
-  margin-left: 20.3%;
+  margin-left: 23.4%;
 }
 .linkFixed {
   position: fixed;
   top: 60px;
   z-index: 999;
-  margin-left: 68.5%;
+  margin-left: 70.7%;
 }
 .nav {
-  margin-left: 13%;
+  margin-left: 16.5%;
 }
 .list {
-  margin-left: 1%;
+  margin-left: 0.1%;
 }
 .link {
-  margin-left: 66.7%;
+  margin-left: 69.1%;
 }
 </style>

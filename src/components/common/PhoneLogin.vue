@@ -15,21 +15,29 @@
           style="width: 150px"
           v-model="ruleForm.phoneVerification"
         ></el-input
-      ></el-col>
+        >
+      </el-col>
       <el-col :span="12"
-        ><el-button class="valiBtn" :disabled="disabled" @click="tackBtn">{{
-          valiBtn
-        }}</el-button>
+      >
+        <el-button class="valiBtn" :disabled="disabled" @click="tackBtn">{{
+            valiBtn
+          }}
+        </el-button>
       </el-col>
     </el-form-item>
     <el-form-item>
       <el-col :span="6"
-        ><el-button type="primary" @click="phoneLogin('ruleForm')"
-          >登录</el-button
-        ></el-col
+      >
+        <el-button type="primary" @click="phoneLogin('ruleForm')"
+        >登录
+        </el-button
+        >
+      </el-col
       >
       <el-col :span="12"
-        ><el-button @click="resetForm('ruleForm')">重置</el-button></el-col
+      >
+        <el-button @click="resetForm('ruleForm')">重置</el-button>
+      </el-col
       >
     </el-form-item>
   </el-form>
@@ -68,14 +76,14 @@ export default {
       valiBtn: "获取验证码",
       ruleForm: {
         phone: "",
-        phoneVerification: "",
+        phoneVerification: ""
       },
       rules: {
         phone: [{ validator: checkPhone, trigger: "blur" }],
         phoneVerification: [
-          { validator: checkPhoneVerification, trigger: "blur" },
-        ],
-      },
+          { validator: checkPhoneVerification, trigger: "blur" }
+        ]
+      }
     };
   },
   //监听属性 类似于data概念
@@ -102,7 +110,7 @@ export default {
     phoneLogin(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert("phoneLoginsubmit!");
+          this.$emit('phoneDialogVisible',false);
         } else {
           console.log("error submit!!");
           return false;
@@ -111,22 +119,31 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
-    },
+    }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {},
-  beforeCreate() {}, //生命周期 - 创建之前
-  beforeMount() {}, //生命周期 - 挂载之前
-  beforeUpdate() {}, //生命周期 - 更新之前
-  updated() {}, //生命周期 - 更新之后
-  beforeDestroy() {}, //生命周期 - 销毁之前
-  destroyed() {}, //生命周期 - 销毁完成
-  activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
+  mounted() {
+  },
+  beforeCreate() {
+  }, //生命周期 - 创建之前
+  beforeMount() {
+  }, //生命周期 - 挂载之前
+  beforeUpdate() {
+  }, //生命周期 - 更新之前
+  updated() {
+  }, //生命周期 - 更新之后
+  beforeDestroy() {
+  }, //生命周期 - 销毁之前
+  destroyed() {
+  }, //生命周期 - 销毁完成
+  activated() {
+  } //如果页面有keep-alive缓存功能，这个函数会触发
 };
 </script>
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 //@import url(); 引入公共css类
 .valiBtn {
   width: 100px;

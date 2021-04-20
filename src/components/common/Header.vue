@@ -9,20 +9,23 @@
           height="30px"
         /> </el-link
     ></el-col>
-    <el-col :span="1" id="logo" pull="1">
-      <el-link :underline="false">首页</el-link>
+    <el-col :span="1" id="logo" pull="1" >
+
+      <el-link :underline="false" :type="type" href="/home">首页</el-link>
     </el-col>
     <el-col :span="1" id="logo" pull="1">
-      <el-link :underline="false" id="ng">博客</el-link>
+      <el-link :underline="false" id="ng" :type="type" href="/blog"
+        >博客</el-link
+      >
     </el-col>
     <el-col :span="1" id="logo" pull="1">
-      <el-link :underline="false">下载</el-link>
+      <el-link :underline="false" :type="type">下载</el-link>
     </el-col>
     <el-col :span="1" id="logo" pull="1">
-      <el-link :underline="false">论坛</el-link>
+      <el-link :underline="false" :type="type">论坛</el-link>
     </el-col>
     <el-col :span="1" id="logo" pull="1">
-      <el-link :underline="false">电子书</el-link>
+      <el-link :underline="false" :type="type">电子书</el-link>
     </el-col>
     <el-col :span="4">
       <el-autocomplete
@@ -116,7 +119,9 @@ export default {
   },
   data() {
     //这里存放数据
+   
     return {
+      type: "default",
       disabled: false,
       mktext: "",
       activeName: "",
@@ -124,12 +129,20 @@ export default {
       state: "",
       timeout: null,
       isLogin: 0,
+      redirect: "",
     };
   },
   //监听属性 类似于data概念
   computed: {},
   //监控data中的数据变化
-  watch: {},
+  watch: {
+    $route: {
+      handler: function (route) {
+        this.redirect = route.query && route.query.redirect;
+      },
+      immediate: true,
+    },
+  },
   //方法集合
   methods: {
     submit() {
@@ -175,9 +188,13 @@ export default {
     handleIconClick(ev) {
       console.log(ev);
     },
+
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    console.log(this.$route);
+    
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
     var that = this;

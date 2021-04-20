@@ -1,28 +1,34 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "@/views/Home.vue";
+import Layout from "@/views/Layout.vue";
+
 
 Vue.use(VueRouter);
 
-const routes = [
-  {
+const routes = [{
     path: "/",
-    name: "Home",
-    component: Home
+    name: "Layout",
+    redirect: "/home",
   },
   {
-    path: "/editor",
-    name: "Home",
-    component: Home
+    path: "/home",
+    name: "Layout",
+    component: Layout
   },
   {
-    path: "/content",
-    name: "Home",
-    component: Home
+    path: "/login",
+    name: "Layout",
+    component: Layout
+  },
+  {
+    path: "/blog",
+    name: "Layout",
+    component: Layout
   },
 ];
 
 const router = new VueRouter({
+  mode: 'history', // 去掉url中的#
   routes
 });
 

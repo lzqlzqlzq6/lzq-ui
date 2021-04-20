@@ -3,7 +3,7 @@
     <el-avatar
       style="margin-top: 5px"
       :size="avatarSize"
-      src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+      :src="avatar"
       class="el-dropdown-link"
     >
     </el-avatar>
@@ -14,7 +14,7 @@
       <el-dropdown-item :disabled="vip == 1"
         ><img
           v-if="vip == 1"
-          id="vip"
+          id="vipcss"
           src="@/assets/icon/yvip.svg"
           alt=""
           height="30px"
@@ -27,7 +27,7 @@
           placement="left"
         >
           <img
-            id="vip"
+            id="vipcss"
             src="@/assets/icon/nvip.svg"
             alt=""
             height="30px"
@@ -37,8 +37,8 @@
         >个人中心</el-dropdown-item
       >
       <el-dropdown-item icon="el-icon-star-on">我的收藏</el-dropdown-item>
-      <el-dropdown-item icon="el-icon-s-order">我的订单</el-dropdown-item>
-      <el-dropdown-item icon="el-icon-s-finance">我的钱包</el-dropdown-item>
+      <!-- <el-dropdown-item icon="el-icon-s-order">我的订单</el-dropdown-item>
+      <el-dropdown-item icon="el-icon-s-finance">我的钱包</el-dropdown-item> -->
       <el-dropdown-item icon="el-icon-switch-button" divided="true"
         >退出</el-dropdown-item
       >
@@ -57,9 +57,11 @@ export default {
   data() {
     //这里存放数据
     return {
+      avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
       userName: "lzq",
       avatarSize: 35,
       vip: 0,
+      roles: [],
     };
   },
   //监听属性 类似于data概念
@@ -68,6 +70,16 @@ export default {
   watch: {},
   //方法集合
   methods: {
+    getInfo() {
+          this.$store
+            .dispatch("Login", this.ruleForm)
+            .then(() => {
+              this.dialogVisible = false;
+              this.$router.push({ path: this.redirect || "/" }).catch(()=>{});
+            })
+            .catch(() => {
+            });
+    },
     havAvatar(vd) {
       vd ? (this.avatarSize = 45) : (this.avatarSize = 35);
     },
@@ -92,7 +104,7 @@ export default {
   text-align: center;
   color: #000;
 }
-#vip {
+#vipcss {
   padding-left: 13px;
 }
 </style>

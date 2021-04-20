@@ -1,9 +1,14 @@
 <template>
   <div class="footer">
     <span style="padding-top: 50px"
-      ><a>关于我们</a>丨<a>加入我们</a>丨<a>联系我们</a>丨<a>帮助中心</a></span
+      ><a href="#">关于我们</a>丨<a href="#">加入我们</a>丨<a href="#"
+        >联系我们</a
+      >丨<a href="#">帮助中心</a></span
     ><br />
-    <span>Copyright © LZQ网络科技有限公司 湘ICP备 - 199909220017号</span>
+    <span
+      >Copyright © LZQBlog
+      <a style="padding-left: 20px;" href="https://beian.miit.gov.cn">湘ICP备2021005373号-1</a></span
+    >
   </div>
 </template>
 
@@ -51,7 +56,9 @@ export default {
   }
 
   a {
+    color: rgb(168, 168, 168);
     padding-right: 5px;
+    text-decoration: none;
     &:hover {
       color: #000;
     }
