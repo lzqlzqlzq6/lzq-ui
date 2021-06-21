@@ -17,7 +17,7 @@
           id="vipcss"
           src="@/assets/icon/yvip.svg"
           alt=""
-          height="30px"
+          height="25px"
           width="50px" />
         <el-tooltip
           v-if="vip == 0"
@@ -30,13 +30,14 @@
             id="vipcss"
             src="@/assets/icon/nvip.svg"
             alt=""
-            height="30px"
+            height="25px"
             width="50px" /></el-tooltip
       ></el-dropdown-item>
+      <router-link to="/user/profile">
       <el-dropdown-item icon="el-icon-user-solid" divided="true"
         >个人中心</el-dropdown-item
-      >
-      <el-dropdown-item icon="el-icon-star-on">我的收藏</el-dropdown-item>
+      ></router-link>
+      <el-dropdown-item icon="el-icon-star-on">内容管理</el-dropdown-item>
       <!-- <el-dropdown-item icon="el-icon-s-order">我的订单</el-dropdown-item>
       <el-dropdown-item icon="el-icon-s-finance">我的钱包</el-dropdown-item> -->
       <el-dropdown-item icon="el-icon-switch-button" divided="true"
@@ -57,11 +58,10 @@ export default {
   data() {
     //这里存放数据
     return {
-      avatar: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
-      userName: "lzq",
+      avatar: this.$store.getters.avatar?this.$store.getters.avatar:'',
+      userName: this.$store.getters.name?this.$store.getters.name:'',
       avatarSize: 35,
-      vip: 0,
-      roles: [],
+      vip: this.$store.getters.roles.includes('MEMBER')?1:0,
     };
   },
   //监听属性 类似于data概念
@@ -99,6 +99,12 @@ export default {
 </script>
 <style lang='scss' scoped>
 //@import url(); 引入公共css类
+a {
+  text-decoration: none;
+}
+.router-link-active {
+  text-decoration: none;
+}
 .username {
   font-size: 25px;
   text-align: center;

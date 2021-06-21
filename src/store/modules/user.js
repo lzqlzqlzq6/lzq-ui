@@ -13,6 +13,7 @@ const user = {
     state: {
         token: getToken(),
         name: '',
+        nickname: '',
         avatar: '',
         roles: [],
         permissions: []
@@ -24,6 +25,9 @@ const user = {
         },
         SET_NAME: (state, name) => {
             state.name = name
+        },
+        SET_NICKNAME: (state, nickname) => {
+            state.nickname = nickname
         },
         SET_AVATAR: (state, avatar) => {
             state.avatar = avatar
@@ -53,13 +57,11 @@ const user = {
             }
             return new Promise((resolve, reject) => {
                 login(data).then((res) => {
-                    console.log(res);
                     if (res.success) {
                         setToken(res.data.token);
                         commit('SET_TOKEN', res.data.token)
                         resolve()
                     } else {
-                        console.log("error");
                     }
                 }).catch(error => {
                     reject(error)
@@ -68,20 +70,20 @@ const user = {
         },
 
         // 获取用户信息
-        GetInfo({
+        async GetInfo({
             commit,
         }) {
             return new Promise((resolve, reject) => {
                 getInfo().then(res => {
-                    const user = res.user
-                    const avatar = user.avatar == "" ? 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png' : user.avatar;
-                    if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-                        commit('SET_ROLES', res.roles)
-                        commit('SET_PERMISSIONS', res.permissions)
+                    const avatar = res.data.avatar == "" ? 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png' : res.data.avatar;
+                    if (res.data.roles && res.data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
+                        commit('SET_ROLES', res.data.roles)
+                        commit('SET_PERMISSIONS', res.data.permissions)
                     } else {
                         commit('SET_ROLES', ['ROLE_DEFAULT'])
                     }
-                    commit('SET_NAME', user.userName)
+                    commit('SET_NAME', res.data.name)
+                    commit('SET_NICKNAME', res.data.nickname)
                     commit('SET_AVATAR', avatar)
                     resolve(res)
                 }).catch(error => {

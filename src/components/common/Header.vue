@@ -9,26 +9,21 @@
           height="30px"
         /> </el-link
     ></el-col>
-    <el-col :span="1" id="logo" pull="1" >
-
-      <el-link :underline="false" :type="type" href="/home">首页</el-link>
+    <el-col :span="1" id="logo" pull="1">
+      <el-link :underline="false" :type="type" href="/">首页</el-link>
     </el-col>
     <el-col :span="1" id="logo" pull="1">
       <el-link :underline="false" id="ng" :type="type" href="/blog"
         >博客</el-link
       >
     </el-col>
-    <el-col :span="1" id="logo" pull="1">
+    <el-col :span="1" id="logo" pull="1" v-hasRole="['USER']">
       <el-link :underline="false" :type="type">下载</el-link>
-    </el-col>
-    <el-col :span="1" id="logo" pull="1">
-      <el-link :underline="false" :type="type">论坛</el-link>
-    </el-col>
-    <el-col :span="1" id="logo" pull="1">
-      <el-link :underline="false" :type="type">电子书</el-link>
     </el-col>
     <el-col :span="4">
       <el-autocomplete
+      :disabled="this.$route.path== '/blog' ? false : true"
+        :trigger-on-focus="false"
         style="width: 250px; padding-top: 2px"
         clearable="true"
         v-model="state"
@@ -68,38 +63,14 @@
       </el-dropdown>
     </el-col>
     <el-col :span="2" v-if="isLogin == 1">
-      <answer v-if="$route.path == '/'"
-        ><el-button
-          id="xbk"
-          type="primary"
-          size="medium"
-          round
-          plain
-          @click="editor"
-          >写博客</el-button
-        ></answer
-      >
-      <answer v-if="$route.path == '/content'"
-        ><el-button
-          id="xbk"
-          type="primary"
-          size="medium"
-          round
-          plain
-          @click="editor"
-          >写博客</el-button
-        ></answer
-      >
-      <answer v-if="$route.path == '/editor'"
-        ><el-button
-          id="xbk"
-          type="primary"
-          size="medium"
-          @click="submit"
-          round
-          plain
-          >发布博客</el-button
-        ></answer
+      <el-button
+        id="xbk"
+        type="primary"
+        size="medium"
+        round
+        plain
+        @click="editor"
+        >写博客</el-button
       >
     </el-col>
   </el-row>
@@ -110,6 +81,8 @@
 //例如：import 《组件名称》 from '《组件路径》';
 import Avatar from "@/components/common/Avatar";
 import Login from "@/components/common/Login";
+import { getToken } from "@/utils/cookie";
+import { getType } from "@/request/api";
 export default {
   name: "Header",
   //import引入的组件需要注入到对象中才能使用
@@ -119,17 +92,18 @@ export default {
   },
   data() {
     //这里存放数据
-   
+
     return {
       type: "default",
       disabled: false,
-      mktext: "",
+      //mktext: "",
       activeName: "",
-      restaurants: [],
       state: "",
       timeout: null,
-      isLogin: 0,
+      isLogin: getToken() ? 1 : 0,
       redirect: "",
+      menu: false,
+      queryList: [],
     };
   },
   //监听属性 类似于data概念
@@ -151,57 +125,43 @@ export default {
     editor() {
       this.$router.push("/editor");
     },
-    loadAll() {
-      return [
-        {
-          value: "(小杨生煎)西郊百联餐厅",
-          address: "长宁区仙霞西路88号百联2楼",
-        },
-        { value: "阳阳麻辣烫", address: "天山西路389号" },
-        {
-          value: "南拳妈妈龙虾盖浇饭",
-          address: "普陀区金沙江路1699号鑫乐惠美食广场A13",
-        },
-      ];
-    },
     querySearchAsync(queryString, cb) {
-      var restaurants = this.restaurants;
-      var results = queryString
-        ? restaurants.filter(this.createStateFilter(queryString))
-        : restaurants;
-
+      var queryList = this.queryList;
+        var results = queryString ? queryList.filter(this.createFilter(queryString)) : queryList;
       clearTimeout(this.timeout);
       this.timeout = setTimeout(() => {
         cb(results);
       }, 1000 * Math.random());
+      
     },
-    createStateFilter(queryString) {
-      return (state) => {
-        return (
-          state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
-        );
-      };
-    },
+    createFilter(queryString) {
+        return (queryList) => {
+          return (queryList.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
     handleSelect(item) {
-      console.log(item);
+      console.log('handleSelect'+item);
     },
     handleIconClick(ev) {
-      console.log(ev);
+      this.$EventBus.$emit('querySearch',{query:this.state});
     },
-
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {
-    console.log(this.$route);
-    
-  },
+  created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
-    var that = this;
-    this.$EventBus.$on("change", (mktext) => {
-      that.mktext = mktext; //这是组件A发送的消息！
+    var list = [];
+    getType().then((res) => {
+      if (res.success) {
+        for (let item of res.data.typeList) {
+          list.push({
+            value: item.name,
+            id: item.id,
+          });
+        }
+      }
     });
-    this.restaurants = this.loadAll();
+    this.queryList = list;
   },
   beforeCreate() {}, //生命周期 - 创建之前
   beforeMount() {}, //生命周期 - 挂载之前

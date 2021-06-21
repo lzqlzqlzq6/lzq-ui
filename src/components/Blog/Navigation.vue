@@ -1,8 +1,11 @@
 <template>
   <div class="navigation">
     <el-card class="box-card">
-      <div v-for="o in 10" :key="o" class="text item">
-        <el-button class="bt" type="text" @click="test()">博客分类</el-button>
+      <el-button class="bt" type="text" @click="findByTypeId(0)">热点</el-button>
+      <div v-for="type in typeList" :key="type.id" class="text item">
+        <el-button class="bt" type="text" @click="findByTypeId(type.id)">{{
+          type.name
+        }}</el-button>
       </div>
     </el-card>
   </div>
@@ -11,7 +14,8 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-import { test } from "@/request/api.js";
+import { getType } from "@/request/api";
+import { finishLoading, startLoading } from "@/utils/loading";
 export default {
   name: "Navigation",
   //import引入的组件需要注入到对象中才能使用
@@ -19,8 +23,8 @@ export default {
   data() {
     //这里存放数据
     return {
+      typeList: [],
       isCollapse: true,
-      ssssss: false,
     };
   },
   //监听属性 类似于data概念
@@ -29,18 +33,24 @@ export default {
   watch: {},
   //方法集合
   methods: {
-    test() {
-      test().then((data) => {
-            if (data.success) {
-              console.log(data.message);
-            }
-          });
-    },
+    findByTypeId(id){
+      this.$EventBus.$emit('findByTypeId',{typeId:id});
+    }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {},
+  mounted() {
+
+    getType().then((res) => {
+      startLoading();
+      if (res.success) {
+        this.typeList = res.data.typeList;
+        finishLoading();
+      } else {
+      }
+    });
+  },
   beforeCreate() {}, //生命周期 - 创建之前
   beforeMount() {}, //生命周期 - 挂载之前
   beforeUpdate() {}, //生命周期 - 更新之前

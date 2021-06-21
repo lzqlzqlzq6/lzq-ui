@@ -1,14 +1,13 @@
 <template>
-  <div id="app">
+  <div id="app" :class="this.$route.path == '/' ? 'home' : ''">
+    <el-backtop
+      :bottpm="40"
+    ><div class="top">UP</div>
+    </el-backtop>
     <div :class="headerFixed == true ? 'isFixed' : 'header'">
       <Header />
     </div>
-    <answer v-if="$route.path == '/home'"><Home /> </answer>
-    <answer v-if="$route.path == '/editor'"><Editor /> </answer>
-    <answer v-if="$route.path == '/content'"><Content /> </answer>
-    <answer v-if="$route.path == '/blog'"
-      ><div><Blog /></div
-    ></answer>
+    <router-view />
     <div class="footer"><Footer /></div>
   </div>
 </template>
@@ -18,19 +17,11 @@
 //例如：import 《组件名称》 from '《组件路径》';
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
-import Blog from "@/components/Blog/Index";
-import Editor from "@/components/Blog/Editor";
-import Content from "@/components/Blog/Content";
-import Home from "@/components/Home/Index";
 export default {
   name: "Layout",
   components: {
     Header,
-    Blog,
     Footer,
-    Editor,
-    Content,
-    Home
   },
   data() {
     //这里存放数据
@@ -75,6 +66,9 @@ export default {
 };
 </script>
 <style lang='scss' scoped>
+.home {
+  background-image: url("../assets/images/6.gif");
+}
 #app {
   height: 100%;
   margin: 0;

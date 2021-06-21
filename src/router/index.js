@@ -5,31 +5,64 @@ import Layout from "@/views/Layout.vue";
 
 Vue.use(VueRouter);
 
-const routes = [{
+
+export const constantRoutes = [
+  // 首页
+  {
     path: "/",
     name: "Layout",
-    redirect: "/home",
+    component: Layout,
+    children: [{
+        path: "/",
+        name: "home",
+        component: () => import('@/components/Home/Index'),
+        meta: {
+          title: '首页'
+        },
+      },
+      {
+        path: "/blog",
+        name: "blog",
+        component: () => import('@/components/Blog/Index'),
+        meta: {
+          title: '博客'
+        },
+      },
+      {
+        path: "/content",
+        name: "content",
+        component: () => import('@/components/Blog/Content'),
+        meta: {
+          title: '文章'
+        },
+      },
+      {
+        path: "/user",
+        name: "user",
+        component: () => import('@/components/User/Index'),
+        meta: {
+          title: '个人中心'
+        },
+        children: [{
+          path: "/user/profile",
+          name: "profile",
+          component: () => import('@/components/User/Profile'),
+          meta: {
+            title: '个人资料'
+          },
+        }, ]
+      },
+    ]
   },
-  {
-    path: "/home",
-    name: "Layout",
-    component: Layout
-  },
-  {
-    path: "/login",
-    name: "Layout",
-    component: Layout
-  },
-  {
-    path: "/blog",
-    name: "Layout",
-    component: Layout
-  },
-];
+]
 
-const router = new VueRouter({
-  mode: 'history', // 去掉url中的#
-  routes
-});
+//export default router;
+const createRouter = () => new VueRouter({
+  mode: 'history', // require service support
+  //scrollBehavior: () => ({ y: 0 }),
+  routes: constantRoutes
+})
 
-export default router;
+const router = createRouter()
+
+export default router

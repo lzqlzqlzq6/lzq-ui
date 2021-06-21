@@ -8,6 +8,8 @@ import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import axios from '@/request/http'
 import api from '@/request/api'
+import '@/permission'
+import permission from './directive/permission'
 
 Vue.prototype.$axios = axios;
 Vue.prototype.$api = api;
@@ -16,6 +18,7 @@ Vue.prototype.$api = api;
 Vue.prototype.$EventBus = new Vue()
 Vue.use(mavonEditor)
 Vue.use(ElementUI)
+Vue.use(permission)
 Vue.config.productionTip = false;
 
 new Vue({

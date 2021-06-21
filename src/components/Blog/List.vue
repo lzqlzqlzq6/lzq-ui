@@ -1,21 +1,28 @@
 <template>
   <div class="list">
-    <a href="#" v-for="o in 10" :key="o">
+    <router-link
+      v-for="blog in blogList"
+      :key="blog.id"
+      :to="{ name: 'content', query: { id: blog.id } }"
+    >
       <el-card shadow="hover">
-        <p class="title">123</p>
-        <p class="bi">123</p>
-        <span><b>作者</b>: xxx</span><span><b>时间</b>: 2021/03/05 17:36</span
-        ><span><b>浏览</b>: 10000</span><span><b>分类</b>: xxxx</span>
-      </el-card></a
+        <p class="title" v-html="blog.title"></p>
+        <p class="introduce">{{ blog.description }}</p>
+        <span><b>作者</b>: {{ blog.nickname }}</span
+        ><span><b>时间</b>: {{ blog.updateTime }}</span
+        ><span><b>浏览</b>: {{ blog.browsenum }}</span
+        ><span><b>分类</b>: {{ blog.typeName }}</span>
+      </el-card></router-link
     >
     <div class="block">
       <el-pagination
-        @size-change="handleSizeChange"
+        background
         @current-change="handleCurrentChange"
-        :current-page="currentPage4"
-        :page-size="100"
-        layout="total,prev, pager, next, jumper"
-        :total="400"
+        :current-page.sync="currentPage"
+        :page-size="pageSize"
+        layout="total,prev, pager, next"
+        :total="total"
+        hide-on-single-page="true"
       >
       </el-pagination>
     </div>
@@ -25,7 +32,8 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-
+import { getAllBlog } from "@/request/api";
+import { finishLoading, startLoading } from "@/utils/loading";
 export default {
   name: "Blog",
   //import引入的组件需要注入到对象中才能使用
@@ -33,10 +41,11 @@ export default {
   data() {
     //这里存放数据
     return {
-      currentPage1: 5,
-      currentPage2: 5,
-      currentPage3: 5,
-      currentPage4: 4,
+      typeId: -1,
+      currentPage: 1,
+      pageSize: 10,
+      total: 0,
+      blogList: [],
     };
   },
   //监听属性 类似于data概念
@@ -45,23 +54,46 @@ export default {
   watch: {},
   //方法集合
   methods: {
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+    indexFromNav(obj) {
+      this.typeId=obj.typeId;
+      this.getAllBlogs(0,this.pageSize,this.typeId,'');
     },
+    getAllBlogs(from, size, typeId,querySeach) {
+      getAllBlog(from, size, typeId,querySeach).then((res) => {
+        startLoading();
+        if (res.success) {
+          finishLoading();
+          this.blogList = res.data.blogs;
+          this.total = res.data.total;
+        } else {
+        }
+      });
+    },
+    querySearch(obj){
+      console.log(obj.query);
+      this.getAllBlogs(0,this.pageSize,-1,obj.query);
+    },
+
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      var form = (val - 1) * this.pageSize;
+      this.getAllBlogs(form, this.pageSize,this.typeId);
     },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {},
+  mounted() {
+    this.$EventBus.$on("querySearch", this.querySearch);
+    this.$EventBus.$on("findByTypeId", this.indexFromNav);
+    this.getAllBlogs(0,this.pageSize,-1,'');
+  },
   beforeCreate() {}, //生命周期 - 创建之前
   beforeMount() {}, //生命周期 - 挂载之前
   beforeUpdate() {}, //生命周期 - 更新之前
   updated() {}, //生命周期 - 更新之后
   beforeDestroy() {}, //生命周期 - 销毁之前
-  destroyed() {}, //生命周期 - 销毁完成
+  destroyed() {
+  }, //生命周期 - 销毁完成
   activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 };
 </script>
@@ -69,6 +101,7 @@ export default {
 //@import url(); 引入公共css类
 .list {
   width: 200px;
+  min-height: 550px;
   a {
     text-decoration: none;
   }
@@ -85,7 +118,7 @@ export default {
       font-size: 12px;
       color: rgb(168, 168, 168);
     }
-    .bi {
+    .introduce {
       font-size: 12px;
     }
     .text {

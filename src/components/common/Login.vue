@@ -71,7 +71,6 @@
 import PhoneLogin from "@/components/common/PhoneLogin";
 import Res from "@/components/common/Res";
 import { getUUID } from "@/utils";
-
 export default {
   //import引入的组件需要注入到对象中才能使用
   components: {
@@ -109,6 +108,7 @@ export default {
         password: "",
         verification: "",
         uuid: undefined,
+        test: "",
       },
       rules: {
         username: [{ validator: checkAccount, trigger: "blur" }],
@@ -120,14 +120,7 @@ export default {
   //监听属性 类似于data概念
   computed: {},
   //监控data中的数据变化
-  watch: {
-    $route: {
-      handler: function(route) {
-        this.redirect = route.query && route.query.redirect;
-      },
-      immediate: true
-    }
-  },
+  watch: {},
   //方法集合
   methods: {
     DialogVisible(data) {
@@ -144,13 +137,12 @@ export default {
             .dispatch("Login", this.ruleForm)
             .then(() => {
               this.dialogVisible = false;
-              this.$router.push({ path: this.redirect || "/" }).catch(()=>{});
+              window.location.reload("http://localhost:8100");
             })
             .catch(() => {
               this.getCaptcha();
             });
         } else {
-          console.log("error submit!!");
           return false;
         }
       });

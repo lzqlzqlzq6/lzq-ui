@@ -1,6 +1,8 @@
 // 导入axios
 import axios from 'axios';
-import {Message} from 'element-ui'
+import {
+  Message
+} from 'element-ui'
 import {
   getToken
 } from '@/utils/cookie'
@@ -12,6 +14,8 @@ axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
 axios.defaults.baseURL = '/api';
 // 请求响应超时时间
 axios.defaults.timeout = 5000;
+
+
 /**
  * 请求拦截器，每个请求都加上token
  */
@@ -33,7 +37,7 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   response => {
     /**
-     * code为非20000是抛错 可结合自己业务进行修改
+     * code为非200是抛错 可结合自己业务进行修改
      */
     const res = response.data
     // debugger
@@ -41,7 +45,7 @@ axios.interceptors.response.use(
       Message({
         message: res.message,
         type: 'error',
-        duration: 5 * 1000
+        duration: 2 * 1000
       })
       return Promise.reject('error')
     } else {
@@ -53,7 +57,7 @@ axios.interceptors.response.use(
     Message({
       message: error.message,
       type: 'error',
-      duration: 5 * 1000
+      duration: 2 * 1000
     })
     return Promise.reject(error)
   }
@@ -61,6 +65,26 @@ axios.interceptors.response.use(
 
 // 封装自己的get/post方法
 export default {
+
+  /**
+   * 请求form-data方法
+   */
+  upload: function (url, params) {
+    return new Promise((resolve, reject) => {
+      axios.post(url, params, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+        .then(res => {
+          resolve(res.data);
+        })
+        .catch(err => {
+          reject(err.data)
+        })
+    });
+  },
+
   get: function (path = '', data = {}) {
     return new Promise(function (resolve, reject) {
       axios.get(path, {
@@ -75,9 +99,36 @@ export default {
         });
     });
   },
+
+
+
   post: function (path = '', data = {}) {
     return new Promise(function (resolve, reject) {
       axios.post(path, data)
+        .then(function (response) {
+          resolve(response.data);
+        })
+        .catch(function (error) {
+          reject(error);
+        });
+    });
+  },
+  put: function (path = '', data = {}) {
+    return new Promise(function (resolve, reject) {
+      axios.put(path, data)
+        .then(function (response) {
+          resolve(response.data);
+        })
+        .catch(function (error) {
+          reject(error);
+        });
+    });
+  },
+  delete: function (path = '', data = {}) {
+    return new Promise(function (resolve, reject) {
+      axios.delete(path, {
+          params: data
+        })
         .then(function (response) {
           resolve(response.data);
         })
